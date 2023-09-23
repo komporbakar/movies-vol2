@@ -23,7 +23,7 @@ const Api = {
   },
 
   // Get Video Thumbnail
-  getThumbnail: async (movieId: number) => {
+  getThumbnail: async (movieId: string) => {
     const response = await axios(
       `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`,
       {

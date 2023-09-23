@@ -1,6 +1,11 @@
 import "./popupYoutube.css";
 
-const PopupVideo = ({ videoIds, onClose }) => {
+interface PopupYoutube {
+  videoIds: string | null;
+  onClose: () => void;
+}
+
+const PopupVideo = ({ videoIds, onClose }: PopupYoutube) => {
   const embedUrl = `https://www.youtube.com/embed/${videoIds}`;
 
   return (

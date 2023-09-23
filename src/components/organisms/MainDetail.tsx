@@ -7,10 +7,12 @@ const MainDetail = () => {
   const [actor, setActor] = useState([]);
   const { id } = useParams<{ id: string | undefined }>();
   const callApiMoviesTopRated = async () => {
-    const response = await Api.getActors(id);
-    // console.log(response);
-    const data = response.cast;
-    setActor(data);
+    if (id) {
+      const response = await Api.getActors(parseInt(id));
+      // console.log(response);
+      const data = response.cast;
+      setActor(data);
+    }
   };
   useEffect(() => {
     if (id) {

@@ -13,40 +13,43 @@ interface DetailType {
   original_title: string;
   release_date: string;
   genres: Array<{ name: string }>;
-  runtime?: string;
+  runtime?: string | null;
   overview: string;
+  trailer: string;
   // Tambahkan properti lain yang mungkin ada di objek detail
 }
 
 const HeaderDetails = () => {
-  const { id } = useParams<{ id: string | undefined }>();
+  const id = useParams<{ id: string | undefined }>()?.id;
   // const [detail, setDetail] = useState<DetailType>({ backdrop_path: "" });
   const [detail, setDetail] = useState<DetailType | null>();
-  const [trailer, setTrailer] = useState<DetailType | null>();
+  const [trailer, setTrailer] = useState<string | null>(null);
   const [convertedTime, setConvertedTime] = useState<{
     hours: number;
     remainingMinutes: number;
   } | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const hoursMiutes = () => {
-    const { hours, remainingMinutes } = convertMinutes(detail?.runtime);
-    setConvertedTime({ hours, remainingMinutes });
-  };
+  const runtimeString = detail?.runtime;
+  const runtimeNumber = runtimeString ? parseFloat(runtimeString) : undefined;
 
   const getTrailer = async () => {
-    const res = await Api.getThumbnail(id);
-    const result = res.results[0].key;
-    setTrailer(result);
+    if (id) {
+      const res = await Api.getThumbnail(id);
+      const result = res.results[0].key || null;
+      setTrailer(result);
+    }
   };
 
   // hoursMiutes();
 
   const getDetails = async () => {
-    const response = await Api.getDetails(id);
-    const data = response;
-    // console.log(data);
-    setDetail(data);
+    if (id) {
+      const response = await Api.getDetails(parseInt(id));
+      const data = response;
+      // console.log(data);
+      setDetail(data);
+    }
   };
   // console.log(trailer);
 
@@ -54,8 +57,9 @@ const HeaderDetails = () => {
     getDetails();
   }, []);
   useEffect(() => {
-    if (detail?.runtime) {
-      hoursMiutes();
+    if (runtimeNumber !== undefined) {
+      const { hours, remainingMinutes } = convertMinutes(runtimeNumber);
+      setConvertedTime({ hours, remainingMinutes });
     }
     getTrailer();
   }, [detail]);
