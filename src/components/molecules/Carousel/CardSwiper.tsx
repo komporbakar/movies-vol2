@@ -21,13 +21,22 @@ const CardSwiper = ({ items, title }: CardTypes) => {
     <div className="mt-10">
       <h1 className="text-xl font-semibold text-white mb-3">{title}</h1>
       <Swiper
-        slidesPerView={7}
         spaceBetween={30}
         pagination={{ clickable: true }}
         modules={[Pagination, Navigation]}
         navigation={true}
         loop={true}
         className="mySwiper"
+        breakpoints={{
+          // Tampilan mobile
+          0: {
+            slidesPerView: 3,
+          },
+          // Tampilan desktop (md)
+          768: {
+            slidesPerView: 7,
+          },
+        }}
       >
         {items &&
           items.map((item, i: number) => {
